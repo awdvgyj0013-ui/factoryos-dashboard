@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>FactoryOS｜智慧製造戰情室</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="dark">
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div>
+        <p class="eyebrow">WATERPROOF EQUIPMENT MANUFACTURING</p>
+        <h1>FactoryOS <span>智慧製造戰情室</span></h1>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="sync-pill" id="syncPill" title="資料同步狀態">
+        <span class="status-dot"></span>
+        <span id="syncText">初始化中</span>
+      </div>
+      <button class="icon-btn" id="refreshBtn" type="button" title="立即更新資料" aria-label="立即更新資料">
+        <span class="refresh-icon">↻</span>
+      </button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="切換深淺主題">
+        <span class="theme-icon">☾</span>
+        <span id="themeLabel">深色</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="dashboard-shell">
+    <section class="hero-strip">
+      <div>
+        <p class="section-kicker">LIVE PRODUCTION MONITOR</p>
+        <h2>即時掌握設備健康、產能與異常風險</h2>
+        <p class="subline">資料來源：Google Sheet／03_LiveData ・ 自動更新間隔 <strong id="pollingLabel">30 秒</strong></p>
+      </div>
+      <div class="clock-card">
+        <span>系統時間</span>
+        <strong id="clock">--:--:--</strong>
+        <small id="today">----</small>
+      </div>
+    </section>
+
+    <section class="kpi-grid" aria-label="關鍵績效指標">
+      <article class="kpi-card accent-cyan">
+        <div class="kpi-head"><span>設備總數</span><span class="metric-icon">▦</span></div>
+        <strong id="kpiTotal">--</strong>
+        <p><span id="kpiLines">--</span> 條產線納管</p>
+      </article>
+      <article class="kpi-card accent-green">
+        <div class="kpi-head"><span>正常設備</span><span class="metric-icon">✓</span></div>
+        <strong id="kpiNormal">--</strong>
+        <p><span id="kpiNormalRate">--</span>% 設備狀態正常</p>
+      </article>
+      <article class="kpi-card accent-amber">
+        <div class="kpi-head"><span>警告設備</span><span class="metric-icon">!</span></div>
+        <strong id="kpiWarning">--</strong>
+        <p>需持續觀察與排程處置</p>
+      </article>
+      <article class="kpi-card accent-red">
+        <div class="kpi-head"><span>嚴重異常</span><span class="metric-icon">⚠</span></div>
+        <strong id="kpiCritical">--</strong>
+        <p>建議立即人工確認</p>
+      </article>
+      <article class="kpi-card accent-violet">
+        <div class="kpi-head"><span>平均稼動率</span><span class="metric-icon">◫</span></div>
+        <strong><span id="kpiUtil">--</span><small>%</small></strong>
+        <p>全設備即時平均</p>
+      </article>
+      <article class="kpi-card accent-blue">
+        <div class="kpi-head"><span>平均良率</span><span class="metric-icon">◇</span></div>
+        <strong><span id="kpiYield">--</span><small>%</small></strong>
+        <p>製程品質即時概況</p>
+      </article>
+    </section>
+
+    <section class="panel-grid primary-grid">
+      <article class="panel status-panel">
+        <div class="panel-head">
+          <div><p class="panel-label">EQUIPMENT HEALTH</p><h3>設備健康分布</h3></div>
+          <span class="chip">Live</span>
+        </div>
+        <div class="status-chart-wrap">
+          <div class="donut" id="statusDonut">
+            <div class="donut-core"><strong id="donutTotal">--</strong><span>設備</span></div>
+          </div>
+          <div class="legend-stack">
+            <div class="legend-row"><span class="legend-dot normal"></span><span>Normal</span><strong id="legendNormal">0</strong></div>
+            <div class="legend-row"><span class="legend-dot warning"></span><span>Warning</span><strong id="legendWarning">0</strong></div>
+            <div class="legend-row"><span class="legend-dot critical"></span><span>Critical</span><strong id="legendCritical">0</strong></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel line-panel">
+        <div class="panel-head">
+          <div><p class="panel-label">LINE PERFORMANCE</p><h3>產線稼動率與良率</h3></div>
+          <span class="chip neutral">依產線彙整</span>
+        </div>
+        <div id="linePerformance" class="bar-chart-list"></div>
+      </article>
+
+      <article class="panel alert-panel">
+        <div class="panel-head">
+          <div><p class="panel-label">PRIORITY ALERTS</p><h3>高風險設備</h3></div>
+          <span class="chip danger" id="alertCount">0 筆</span>
+        </div>
+        <div id="priorityAlerts" class="alert-list"></div>
+      </article>
+    </section>
+
+    <section class="panel-grid secondary-grid">
+      <article class="panel temperature-panel">
+        <div class="panel-head">
+          <div><p class="panel-label">THERMAL MONITORING</p><h3>設備溫度排行</h3></div>
+          <span class="threshold-note">≥ 80°C 高溫</span>
+        </div>
+        <div id="temperatureBars" class="rank-bars"></div>
+      </article>
+
+      <article class="panel vibration-panel">
+        <div class="panel-head">
+          <div><p class="panel-label">VIBRATION MONITORING</p><h3>振動風險排行</h3></div>
+          <span class="threshold-note">依相對值排序</span>
+        </div>
+        <div id="vibrationBars" class="rank-bars"></div>
+      </article>
+
+      <article class="panel output-panel">
+        <div class="panel-head">
+          <div><p class="panel-label">TODAY OUTPUT</p><h3>當日產量</h3></div>
+          <span class="chip neutral">pcs</span>
+        </div>
+        <div class="big-output"><strong id="totalOutput">--</strong><span>累計產量</span></div>
+        <div id="lineOutput" class="mini-output-list"></div>
+      </article>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="panel-head table-head">
+        <div><p class="panel-label">LIVE MACHINE TABLE</p><h3>設備即時狀態</h3></div>
+        <div class="filters">
+          <label>
+            <span>產線</span>
+            <select id="lineFilter"><option value="all">全部</option></select>
+          </label>
+          <label>
+            <span>狀態</span>
+            <select id="statusFilter">
+              <option value="all">全部</option>
+              <option value="Normal">Normal</option>
+              <option value="Warning">Warning</option>
+              <option value="Critical">Critical</option>
+            </select>
+          </label>
+          <label class="search-box">
+            <span>搜尋</span>
+            <input id="searchInput" type="search" placeholder="設備編號 / 名稱 / 異常碼" />
+          </label>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>設備</th><th>產線</th><th>設備名稱</th><th>更新時間</th><th>溫度</th><th>振動</th><th>稼動率</th><th>良率</th><th>產量</th><th>異常碼</th><th>狀態</th><th>建議處置</th>
+            </tr>
+          </thead>
+          <tbody id="machineTableBody"></tbody>
+        </table>
+      </div>
+      <div class="table-footer"><span id="tableCount">顯示 0 筆</span><span id="lastUpdated">最後同步：--</span></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js" defer></script>
+</body>
+</html>
