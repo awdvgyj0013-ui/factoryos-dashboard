@@ -183,3 +183,9 @@ td { padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:midd
 .toast.show { opacity:1; transform:translateY(0); }
 @media (max-width: 1280px){ .kpi-grid{grid-template-columns:repeat(3,1fr)} .primary-grid{grid-template-columns:1fr 1fr}.alert-panel{grid-column:1/-1}.secondary-grid{grid-template-columns:1fr 1fr}.output-panel{grid-column:1/-1} }
 @media (max-width: 760px){ .topbar,.hero-strip{align-items:flex-start}.topbar{position:static;flex-direction:column}.top-actions{width:100%;justify-content:flex-start;flex-wrap:wrap}.dashboard-shell{width:min(100% - 20px,1600px);padding-top:16px}.hero-strip{flex-direction:column}.clock-card{text-align:left}.kpi-grid,.primary-grid,.secondary-grid{grid-template-columns:1fr}.alert-panel,.output-panel{grid-column:auto}.status-chart-wrap{grid-template-columns:1fr;justify-items:center}.legend-stack{width:100%}.table-head{align-items:flex-start;flex-direction:column}.filters{justify-content:flex-start;width:100%}.filters label{flex:1 1 140px}.search-box{flex:1 1 100%!important}.search-box input{min-width:0;width:100%} h1 span{display:block;margin-left:0;margin-top:2px} }
+
+
+/* FactoryOS selected A logo */
+.brand-logo-wrap { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; overflow: hidden; background: #111820; border: 1px solid rgba(255,255,255,.16); box-shadow: inset 0 0 0 1px rgba(255,255,255,.03), 0 8px 22px rgba(0,0,0,.22); flex: 0 0 46px; }
+.brand-logo { width: 42px; height: 42px; object-fit: contain; display: block; }
+body[data-theme="light"] .brand-logo-wrap { background: #121820; border-color: rgba(15,48,64,.22); box-shadow: 0 6px 16px rgba(31,55,68,.12); }
